@@ -72,3 +72,29 @@ module.exports.register = async (req, res) => {
         }
     }
 };
+
+module.exports.get = async function (req,res) {
+    try {
+        if (req.headers && req.headers['authorization']) {
+            let authorization = req.headers['authorization'].split(' ')[1], decoded;
+            // try {
+            //     decoded = jwt.verify(authorization, KEYS.jwt);
+            // } catch (e) {
+            //     return res.status(401).send('unauthorized');
+            // }
+
+            // const user_id = decoded.userId;
+
+            // if (req.params.id === user_id) {
+                const user = await Users.find({
+                    _id: req.params.id
+                });
+                res.status(200).json(user);
+            // } else {
+            //     return res.status(403).send('No permission');
+            // }
+        }
+    } catch (e) {
+        errorHandler(res, e);
+    }
+};
