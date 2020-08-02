@@ -75,3 +75,24 @@ module.exports.update = async function (req,res) {
         errorHandler(res, e);
     }
 };
+
+module.exports.delete = async function (req,res) {
+    try {
+        if (req.headers && req.headers['authorization']) {
+            let authorization = req.headers['authorization'].split(' ')[1], decoded;
+            try {
+                jwt.verify(authorization, KEYS.jwt);
+            } catch (e) {
+                return res.status(401).send('unauthorized');
+            }
+
+            const project = await Projects.deleteOne({
+                _id: req.params.id
+            });
+            console.log('project->', project);
+            res.status(200).json('Deleted successfully');
+        }
+    } catch (e) {
+        errorHandler(res, e);
+    }
+};
